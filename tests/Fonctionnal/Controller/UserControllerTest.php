@@ -2,6 +2,7 @@
 
 namespace App\Tests\Fonctionnal\Controller;
 
+use App\Repository\UserRepository;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -12,6 +13,11 @@ class UserControllerTest extends webTestCase
      * @var Generator
      */
     protected static $faker;
+
+    /**
+     * @var UserRepository
+     */
+    protected static $repository;
 
     public static function setUpBeforeClass(): void
     {
@@ -140,5 +146,35 @@ class UserControllerTest extends webTestCase
         $crawler = $browser->submit($form);
 
         $this->assertStringContainsString('est déjà utilisé', $crawler->text());
+    }
+
+    /**
+     * @depends testUserCreateUser
+     */
+    public function testUserModify(string $username)
+    {
+        $browser = static::createClient();
+        $kernel = static::bootKernel();
+        self::$repository = $kernel->getContainer()->get(UserRepository::class);
+        $id = self::$repository->findOneBy(['username' => $username])->getId();
+        $crawler = $browser->request(
+            'GET',
+            'users/'.$id.'/edit'
+        );
+
+        $this->assertSame(200, $browser->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('modify')->form();
+
+        $password = self::$faker->password;
+        $email = self::$faker->email;
+        $form['user[username]'] = $username;
+        $form['user[password][first]'] = $password;
+        $form['user[password][second]'] = $password;
+        $form['user[email]'] = $email;
+
+        $browser->submit($form);
+        $crawler = $browser->followRedirect();
+
+        $this->assertStringContainsString($email, $crawler->text());
     }
 }
