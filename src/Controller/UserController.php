@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/users", name="user_list")
+     * @Route("/users", name="user_list", methods={"GET"})
      *
      * @return Response
      */
@@ -28,7 +28,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function editAction(Request $request, User $user)
+    public function editAction()
     {
     }
 
