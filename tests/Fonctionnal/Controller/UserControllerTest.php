@@ -28,7 +28,7 @@ class UserControllerTest extends webTestCase
     {
         $browser = static::createClient();
 
-        $crawler = $browser->request(
+        $browser->request(
             'GET',
             'users/create'
         );
@@ -156,10 +156,10 @@ class UserControllerTest extends webTestCase
         $browser = static::createClient();
         $kernel = static::bootKernel();
         self::$repository = $kernel->getContainer()->get(UserRepository::class);
-        $id = self::$repository->findOneBy(['username' => $username])->getId();
+        $userId = self::$repository->findOneBy(['username' => $username])->getId();
         $crawler = $browser->request(
             'GET',
-            'users/'.$id.'/edit'
+            'users/'.$userId.'/edit'
         );
 
         $this->assertSame(200, $browser->getResponse()->getStatusCode());
