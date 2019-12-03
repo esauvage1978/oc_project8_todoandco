@@ -27,9 +27,24 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     *
+     * @return Response
      */
-    public function editAction()
+    public function editAction(User $user, Request $request, UserManager $manager): Response
     {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($manager->update($user)) {
+                $this->addFlash('success', 'L\'utilisateur a bien été modifié');
+
+                return $this->redirectToRoute('user_list');
+            }
+            $this->addFlash('danger', 'La modification a echoué. En voici les raisons : '.$manager->getErrors($user));
+        }
+
+        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 
     /**
