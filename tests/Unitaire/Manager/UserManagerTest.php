@@ -20,17 +20,11 @@ class UserManagerTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
-        $kernel = self::bootKernel();
         self::$entity = new User();
     }
 
     public function testMessageError()
     {
-        $values = [
-            'id' => '1',
-            'username' => 'test',
-            'email' => 'test@live.fr',
-        ];
         $error = 'liste des erreurs';
 
         self::$entity = $this->getMockBuilder('App\Entity\User')

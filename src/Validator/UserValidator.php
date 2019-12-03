@@ -41,6 +41,8 @@ class UserValidator
      */
     public function getErrors(User $user): ?string
     {
+        $this->errors = $this->validator->validate($user);
+
         return (string) $this->errors;
     }
 }
