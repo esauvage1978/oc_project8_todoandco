@@ -29,7 +29,18 @@ class UserControllerTest extends webTestCase
         $this->assertSame(200, $browser->getResponse()->getStatusCode(), 'Affichage de la page');
     }
 
-    public function testEmptyValue()
+    public function testAnonymousShowUserList()
+    {
+        $browser = static::createClient();
+
+        $crawler = $browser->request(
+            'GET',
+            'users'
+        );
+        $this->assertSame(200, $browser->getResponse()->getStatusCode(), 'Affichage de la page');
+    }
+
+    public function testUserCreateEmptyValue()
     {
         $browser = static::createClient();
 
@@ -51,7 +62,7 @@ class UserControllerTest extends webTestCase
         $this->assertSame($crawler->getUri(), 'http://localhost/users/create', 'Les url sont différentes');
     }
 
-    public function testUsernamebadValue()
+    public function testUserCreateUsernamebadValue()
     {
         $browser = static::createClient();
 
@@ -75,7 +86,39 @@ class UserControllerTest extends webTestCase
         $this->assertStringContainsString('doit avoir plus de 3 caractères', $crawler->text());
     }
 
-    public function testCreateUser()
+    public function testUserCreateUser()
+    {
+        $browser = static::createClient();
+
+        $crawler = $browser->request(
+            'GET',
+            'users/create'
+        );
+
+        $this->assertSame(200, $browser->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('create')->form();
+
+        $password = self::$faker->password;
+        $username = self::$faker->userName;
+        $form['user[username]'] = $username;
+        $form['user[password][first]'] = $password;
+        $form['user[password][second]'] = $password;
+        $form['user[email]'] = self::$faker->email;
+
+        $browser->submit($form);
+        $crawler = $browser->followRedirect();
+
+        $this->assertSame($crawler->getUri(), 'http://localhost/users', 'Les url sont différentes');
+
+        $this->assertStringContainsString($username, $crawler->text());
+
+        return $username;
+    }
+
+    /**
+     * @depends testUserCreateUser
+     */
+    public function testUserCreateDoublonUsername(string $username)
     {
         $browser = static::createClient();
 
@@ -89,14 +132,13 @@ class UserControllerTest extends webTestCase
 
         $password = self::$faker->password;
 
-        $form['user[username]'] = self::$faker->userName;
+        $form['user[username]'] = $username;
         $form['user[password][first]'] = $password;
         $form['user[password][second]'] = $password;
         $form['user[email]'] = self::$faker->email;
 
-        $browser->submit($form);
-        $crawler = $browser->followRedirect();
+        $crawler = $browser->submit($form);
 
-        $this->assertSame($crawler->getUri(), 'http://localhost/users', 'Les url sont différentes');
+        $this->assertStringContainsString('est déjà utilisé', $crawler->text());
     }
 }
