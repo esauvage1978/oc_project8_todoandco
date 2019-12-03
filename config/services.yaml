@@ -26,3 +26,7 @@ services:
     App\Validator\:
         resource: '../src/Validator/*'
         public: true
+
+    App\Repository\:
+        resource: '../src/Repository/*'
+        public: true
