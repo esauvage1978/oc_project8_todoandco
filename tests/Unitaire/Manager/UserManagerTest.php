@@ -29,7 +29,6 @@ class UserManagerTest extends WebTestCase
     {
         $kernel = self::bootKernel();
         self::$manager = $kernel->getContainer()->get(UserManager::class);
-        $user = new User();
         self::$faker = Factory::create('fr_FR');
     }
 
