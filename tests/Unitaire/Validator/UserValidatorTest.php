@@ -5,6 +5,7 @@ namespace App\Tests\Unitaire\Entity;
 use App\Entity\User;
 use App\Validator\UserValidator;
 use Faker\Factory;
+use Faker\Generator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserValidatorTest extends WebTestCase
@@ -20,7 +21,7 @@ class UserValidatorTest extends WebTestCase
     protected static $validator;
 
     /**
-     * @var Factory
+     * @var Generator
      */
     protected static $faker;
 

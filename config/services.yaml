@@ -30,3 +30,7 @@ services:
     App\Repository\:
         resource: '../src/Repository/*'
         public: true
+
+    App\Manager\:
+        resource: '../src/Manager/*'
+        public: true
