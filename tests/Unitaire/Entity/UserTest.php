@@ -50,4 +50,27 @@ class UserTest extends TestCase
         self::$entity->setEmail($value);
         $this->assertSame($value, self::$entity->getEmail(), 'test same');
     }
+
+    public function testRoles()
+    {
+        $value = ['admin'];
+
+        $this->assertSame([], self::$entity->getRoles());
+        self::$entity->setRoles($value);
+        $this->assertSame($value, self::$entity->getRoles());
+    }
+
+    public function testPlainPassword()
+    {
+        $value = 'testUsername';
+
+        $this->assertNull(self::$entity->getPlainPassword());
+        self::$entity->setPlainPassword($value);
+        $this->assertSame($value, self::$entity->getPlainPassword());
+    }
+
+    public function testSalt()
+    {
+        $this->assertNull(self::$entity->getSalt());
+    }
 }
