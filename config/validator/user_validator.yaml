@@ -27,3 +27,11 @@ App\Entity\User:
           max: 64
           minMessage: 'Le mail "{{ value }}" doit avoir plus de 5 caractères'
           maxMessage: 'Le mail "{{ value }}" doit avoir moins de 64 caractères'
+    plainPassword:
+      - Length:
+          min: 8
+          max: 255
+          minMessage: 'Le mot de passe doit avoir au minimum "{{ limit }}" caractères.'
+      - Regex:
+          pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/i'
+          message: 'Le mot de passe doit contenir au moins une lettre, un chiffre et avoir au moins 8 caractères'

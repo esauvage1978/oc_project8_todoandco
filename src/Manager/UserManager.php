@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\User;
 use App\Validator\UserValidator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserManager
 {
@@ -18,15 +19,25 @@ class UserManager
      */
     private $validator;
 
-    public function __construct(EntityManagerInterface $manager,
-                                UserValidator $validator)
-    {
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+
+    public function __construct(
+        EntityManagerInterface $manager,
+        UserValidator $validator,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->manager = $manager;
         $this->validator = $validator;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function update(User $user): bool
+    public function save(User $user): bool
     {
+        $this->initialiseUser($user);
+
         if (!$this->validator->isValid($user)) {
             return false;
         }
@@ -35,6 +46,27 @@ class UserManager
         $this->manager->flush();
 
         return true;
+    }
+
+    public function initialiseUser(User $user)
+    {
+        if (empty($user->getRoles())) {
+            $user->setRoles(['ROLE_USER']);
+        }
+        $this->encodePassword($user);
+    }
+
+    public function encodePassword(User $user)
+    {
+        $plainPassword = $user->getPlainPassword();
+
+        if (!empty($plainPassword)) {
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    $plainPassword
+                ));
+        }
     }
 
     public function getErrors(User $entity)
