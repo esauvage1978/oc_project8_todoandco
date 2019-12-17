@@ -40,7 +40,7 @@ class UserManagerTest extends WebTestCase
             ->setEmail(self::$faker->email)
             ->setPlainPassword(self::$faker->password);
 
-        $this->assertTrue(self::$manager->update($user));
+        $this->assertTrue(self::$manager->save($user));
     }
 
     public function testCreateUserKo()
@@ -52,7 +52,7 @@ class UserManagerTest extends WebTestCase
             ->setEmail(self::$faker->email)
             ->setPlainPassword(self::$faker->password);
 
-        $this->assertFalse(self::$manager->update($user));
+        $this->assertFalse(self::$manager->save($user));
         $this->assertNotNull(self::$manager->getErrors($user));
     }
 

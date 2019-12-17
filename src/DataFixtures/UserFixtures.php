@@ -61,6 +61,8 @@ class UserFixtures extends Fixture
             $instance = $this->initialise(new User(), self::DATA[$i]);
 
             $this->checkAndPersist($manager, $instance);
+
+            $this->addReference(self::KEY.'-'.$i, $instance);
         }
         $manager->flush();
     }

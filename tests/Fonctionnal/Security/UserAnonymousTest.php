@@ -38,4 +38,14 @@ class UserAnonymousTest extends webTestCase
         );
         $this->assertSame(302, $browser->getResponse()->getStatusCode());
     }
+
+    public function testTaskList()
+    {
+        $browser = static::createClient();
+        $browser->request(
+            'GET',
+            'tasks'
+        );
+        $this->assertSame(302, $browser->getResponse()->getStatusCode());
+    }
 }
