@@ -32,7 +32,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit", methods={"GET"})
      */
-    public function editAction(Task $task): Response
+    public function editAction(): Response
     {
         return null;
     }
@@ -40,7 +40,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task): Response
+    public function toggleTaskAction(): Response
     {
         return null;
     }
@@ -48,7 +48,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task): Response
+    public function deleteTaskAction(): Response
     {
         return null;
     }

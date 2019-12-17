@@ -59,7 +59,7 @@ class TaskControllerTest extends webTestCase
 
     public function testShowList()
     {
-        $crawler = $this->browser->request(
+        $this->browser->request(
             'GET',
             'tasks'
         );
