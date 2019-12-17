@@ -1,92 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <title>To Do List app</title>
+    <title>To Do List app</title>
 
-        <!-- Bootstrap Core CSS -->
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{{ absolute_url( asset('plugins/bootstrap-4.4.1-dist/css/bootstrap.min.css')) }}">
+    <link rel="stylesheet" href="{{ absolute_url( asset('plugins/fontawesome-free/css/all.min.css')) }}">
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
+</head>
 
-        <!-- Custom CSS -->
-        <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
-    </head>
-
-    <body>
-        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{{ path('homepage') }}">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
-                </div>
-            </div>
-        </nav>
-
-        <!-- Page Content -->
+<body>
+<header>
+    <nav class="navbar navbar-b navbar-trans navbar-expand-md fixed-top " style="background-color: #e3f2fd;" id="mainNav">
         <div class="container">
-            <div class="row mb-1">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('user_list') }}" class="btn btn-primary ml-1">Liste des utilisateurs</a>
-                    <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
-                {% endif %}
-                {% if app.user %}
-                    <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
-                {% endif %}
+            <a class="navbar-brand js-scroll" href="{{ path('homepage') }}"
+               title="Retour à la page d'acueil de To Do List app ">
+                To Do List app
+                <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" height="50px"
+                     alt="logo To Do List app"/>
+            </a>
+            <div class="navbar-collapse collapse" id="navbarDefault">
+                <ul class="navbar-nav  ml-auto mr-20 mt-2 ">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if  is_granted('ROLE_USER') %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Tâche
+                                </a>
+                                <div class="dropdown-menu">
+                                    {% if app.user | taskCanCreate %}
+                                        <a class="dropdown-item" href="{{ path('task_create') }}">Ajouter</a>
+                                    {% endif %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ path('task_list') }}">Liste des tâche</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                        {% if  is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Utilisateur
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ path('user_list') }}">Liste</a>
+                                    <a class="dropdown-item" href="{{ path('user_create') }}">Ajouter</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link js-scroll " id="signin"
+                                                href="{{ path('logout') }}">Déconnexion</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link js-scroll " id="signin"
+                                                href="{{ path('login') }}">Connexion</a></li>
 
-                {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                    <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
-                {% endif %}
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    {% for flash_message in app.session.flashBag.get('success') %}
-                        <div class="alert alert-success" role="alert">
-                            <strong>Superbe !</strong> {{ flash_message }}
-                        </div>
-                    {% endfor %}
-
-                    {% for flash_message in app.session.flashBag.get('error') %}
-                        <div class="alert alert-danger" role="alert">
-                            <strong>Oops !</strong> {{ flash_message }}
-                        </div>
-                    {% endfor %}
-
-                    {% block header_title %}{% endblock %}
-                    {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
-                </div>
-            </div>
-
-            <br />
-
-            <div class="row">
-                <div class="col-md-12">
-                    {% block body %}{% endblock %}
-                </div>
+                    {% endif %}
+                </ul>
             </div>
         </div>
-        <!-- /.container -->
+    </nav>
+</header>
 
-        <div class="container">
 
-            <hr>
-            <footer>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p class="pull-right">Copyright &copy; OpenClassrooms</p>
-                    </div>
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    <strong>Superbe !</strong> {{ flash_message }}
                 </div>
-            </footer>
+            {% endfor %}
 
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Oops !</strong> {{ flash_message }}
+                </div>
+            {% endfor %}
+
+            {% block header_title %}{% endblock %}
+            {% block header_img %}
+                <img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}"
+                                       alt="todo list">
+            {% endblock %}
         </div>
+    </div>
 
-        <script src="{{ asset('js/jquery.js') }}"></script>
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    </body>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+
+<div class="container">
+
+    <hr>
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="pull-right">Copyright &copy; OpenClassrooms</p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+
+<script src="{{ absolute_url( asset('plugins/jquery/jquery.min.js')) }}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{ absolute_url( asset('plugins/jquery-ui/jquery-ui.min.js')) }}"></script>
+<script src="{{ absolute_url( asset('plugins/bootstrap-4.4.1-dist/js/bootstrap.bundle.min.js')) }}"></script>
+</body>
 </html>
