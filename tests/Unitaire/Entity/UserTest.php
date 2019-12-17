@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unitaire\Entity;
 
+use App\Entity\Task;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
@@ -72,5 +73,21 @@ class UserTest extends TestCase
     public function testSalt()
     {
         $this->assertNull(self::$entity->getSalt());
+    }
+
+    public function testErase()
+    {
+        self::$entity->eraseCredentials();
+        $this->assertTrue(true);
+    }
+
+    public function testTask()
+    {
+        $this->assertNotNull(self::$entity->getTasks());
+        $task = new Task();
+        self::$entity->addTask($task);
+        $this->assertSame(1, self::$entity->getTasks()->count());
+        self::$entity->removeTask($task);
+        $this->assertNotNull(self::$entity->getTasks());
     }
 }

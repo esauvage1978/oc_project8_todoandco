@@ -23,14 +23,9 @@ class UserControllerTest extends webTestCase
     private $browser;
 
     /**
-     * var UserRepository.
+     * @var UserRepository
      */
     private $repo;
-
-    /**
-     * var User.
-     */
-    private $user;
 
     protected function setUp(): void
     {
@@ -46,9 +41,8 @@ class UserControllerTest extends webTestCase
         $firewallName = 'main';
         $firewallContext = 'main';
 
-        $this->user = $this->repo->findOneBy(['username' => 'Manu']);
-
-        $token = new UsernamePasswordToken($this->user, null, $firewallName, ['ROLE_ADMIN']);
+        $user = $this->repo->findOneBy(['username' => 'Manu']);
+        $token = new UsernamePasswordToken($user, null, $firewallName, ['ROLE_ADMIN']);
 
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
@@ -170,7 +164,7 @@ class UserControllerTest extends webTestCase
         $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
         $form = $crawler->selectButton('modify')->form();
 
-        $password = self::$faker->password;
+        $password = 'U123456789';
         $email = self::$faker->email;
         $form['user[username]'] = $username;
         $form['user[plainpassword][first]'] = $password;
