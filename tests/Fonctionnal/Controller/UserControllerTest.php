@@ -108,7 +108,7 @@ class UserControllerTest extends webTestCase
         $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
         $form = $crawler->selectButton('create')->form();
 
-        $password = self::$faker->password;
+        $password = self::$faker->password.'13246456';
         $username = self::$faker->userName;
         $form['user[username]'] = $username;
         $form['user[plainpassword][first]'] = $password;
@@ -138,7 +138,7 @@ class UserControllerTest extends webTestCase
         $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
         $form = $crawler->selectButton('create')->form();
 
-        $password = self::$faker->password;
+        $password = self::$faker->password.'13246456';
 
         $form['user[username]'] = $username;
         $form['user[plainpassword][first]'] = $password;
@@ -175,5 +175,11 @@ class UserControllerTest extends webTestCase
         $crawler = $this->browser->followRedirect();
 
         $this->assertStringContainsString($email, $crawler->text());
+
+        $this->browser->request(
+            'GET',
+            'logout'
+        );
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
     }
 }
