@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\TaskType;
 use App\Manager\TaskManager;
 use App\Repository\TaskRepository;
+use App\Security\TaskVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,8 +38,8 @@ class TaskController extends AbstractController
      */
     public function editAction(Request $request, Task $task, TaskManager $taskManager): Response
     {
+        $this->denyAccessUnlessGranted(TaskVoter::UPDATE, $task);
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
