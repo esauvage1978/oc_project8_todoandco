@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ absolute_url( asset('plugins/summernote/summernote-bs4.css')) }}">
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-10 col-lg-9">
+            <div class="card">
+                {{ include ('task/_form.html.twig') }}
+                <div class="card-footer">
+                    <button class="btn btn-success " name="save" id="save">
+                        <i class="fas fa-save"></i> Modifier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ absolute_url( asset('plugins/summernote/summernote-bs4.min.js')) }}"></script>
+    <script>
+        $(function () {
+            // Summernote
+            $('.textarea').summernote();
+        })
+    </script>
+{% endblock %}

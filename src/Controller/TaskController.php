@@ -4,9 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Form\TaskType;
+use App\Manager\TaskManager;
 use App\Repository\TaskRepository;
+use App\Security\TaskVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,11 +34,26 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit", methods={"GET"})
+     * @Route("/tasks/{id}/edit", name="task_edit",  methods={"GET","POST"})
      */
-    public function editAction(): Response
+    public function editAction(Request $request, Task $task, TaskManager $taskManager): Response
     {
-        return null;
+        $this->denyAccessUnlessGranted(TaskVoter::UPDATE, $task);
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $taskManager->save($task);
+
+            $this->addFlash('success', 'La tâche a bien été modifiée.');
+
+            return $this->redirectToRoute('task_list');
+        }
+
+        return $this->render('task/edit.html.twig', [
+            'form' => $form->createView(),
+            'task' => $task,
+        ]);
     }
 
     /**

@@ -38,7 +38,7 @@ class UserManagerTest extends WebTestCase
         $user
             ->setUsername(self::$faker->userName)
             ->setEmail(self::$faker->email)
-            ->setPlainPassword(self::$faker->password);
+            ->setPlainPassword(self::$faker->password.'12345678');
 
         $this->assertTrue(self::$manager->save($user));
     }

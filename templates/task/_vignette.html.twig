@@ -14,7 +14,7 @@
                 </a>
             </h4>
 
-            <p>{{ task.content }}</p>
+            <p>{{ task.content | raw}}</p>
         </div>
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="card-footer text-center">
