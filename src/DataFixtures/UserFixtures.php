@@ -73,8 +73,6 @@ class UserFixtures extends Fixture
 
         if ($this->validator->isValid($instance)) {
             $manager->persist($instance);
-        } else {
-            var_dump('Validator : '.$this->validator->getErrors($instance));
         }
     }
 
