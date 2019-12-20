@@ -26,11 +26,40 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/create", name="task_create", methods={"GET"})
+     * @Route("/tasks/create", name="task_create", methods={"GET","POST"})
      */
-    public function createAction(): Response
+    public function createAction(Request $request, TaskManager $taskManager): Response
     {
-        return null;
+        return $this->save(
+            $request,
+            new Task(),
+            $taskManager,
+            true
+        );
+    }
+
+    public function save(Request $request, Task $task, TaskManager $taskManager, bool $creation): Response
+    {
+        $this->denyAccessUnlessGranted(
+            ($creation ? TaskVoter::CREATE : TaskVoter::UPDATE),
+            $task);
+
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $taskManager->save($task);
+
+            $this->addFlash('success',
+                ($creation ? 'La tâche a été bien été ajoutée.' : 'La tâche a bien été modifiée.'));
+
+            return $this->redirectToRoute('task_list');
+        }
+
+        return $this->render('task/'.($creation ? 'create' : 'edit').'.html.twig', [
+            'form' => $form->createView(),
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -38,22 +67,12 @@ class TaskController extends AbstractController
      */
     public function editAction(Request $request, Task $task, TaskManager $taskManager): Response
     {
-        $this->denyAccessUnlessGranted(TaskVoter::UPDATE, $task);
-        $form = $this->createForm(TaskType::class, $task);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $taskManager->save($task);
-
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
-
-            return $this->redirectToRoute('task_list');
-        }
-
-        return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
-            'task' => $task,
-        ]);
+        return $this->save(
+            $request,
+            $task,
+            $taskManager,
+            false
+        );
     }
 
     /**
