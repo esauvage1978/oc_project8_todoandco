@@ -23,6 +23,6 @@ class SecurityControllerTest extends webTestCase
 
         $browser->request('GET', '/logout');
         $crawler = $browser->followRedirect();
-        $this->assertSame($crawler->getUri(), 'http://localhost/', 'Les urls de logout sont différentes');
+        $this->assertSame($crawler->getUri(), 'http://localhost/', );
     }
 }
