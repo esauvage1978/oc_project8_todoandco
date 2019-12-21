@@ -161,7 +161,7 @@ class UserControllerTest extends webTestCase
             'users/'.$userId.'/edit'
         );
 
-        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode(), 'show page');
         $form = $crawler->selectButton('modify')->form();
 
         $password = 'U123456789';
@@ -175,11 +175,17 @@ class UserControllerTest extends webTestCase
         $crawler = $this->browser->followRedirect();
 
         $this->assertStringContainsString($email, $crawler->text());
+    }
 
+    /**
+     * @depends testUserModify
+     */
+    public function testUserLogout()
+    {
         $this->browser->request(
             'GET',
             'logout'
         );
-        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $this->assertSame(302, $this->browser->getResponse()->getStatusCode(), 'logout');
     }
 }

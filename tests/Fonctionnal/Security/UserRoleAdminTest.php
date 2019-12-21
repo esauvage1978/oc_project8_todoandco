@@ -2,6 +2,7 @@
 
 namespace App\Tests\Fonctionnal\Security;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -50,30 +51,36 @@ class UserRoleAdminTest extends webTestCase
         $this->browser->getCookieJar()->set($cookie);
     }
 
-    public function testUserCreate()
+    /**
+     * @dataProvider urlAndCode
+     */
+    public function testUrlStatic($url, $code)
     {
         $this->browser->request(
             'GET',
-            'users/create'
+            $url
         );
-        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $this->assertSame($code, $this->browser->getResponse()->getStatusCode());
     }
 
-    public function testUserList()
+    public function urlAndCode()
     {
-        $this->browser->request(
-            'GET',
-            'users'
-        );
-        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        return [
+            ['users', 200],
+            ['users/create', 200],
+            ['tasks', 200],
+            ['tasks/create', 200],
+        ];
     }
 
     public function testUserModify()
     {
+        /** @var User $user */
+        $user = $this->repo->findOneBy(['username' => 'Pauline']);
         $this->browser->request(
             'GET',
-            'users/'.$this->user->getId().'/edit'
+            'users/'.$user->getId().'/edit'
         );
-        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode(), );
     }
 }

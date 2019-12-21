@@ -98,4 +98,26 @@ class TaskControllerTest extends webTestCase
 
         $this->assertStringContainsString($title, $crawler->text());
     }
+
+    public function testTaskDelete()
+    {
+        /** @var Task $task */
+        $tasks = $this->taskRepo->findAll();
+        $this->assertGreaterThan(0, count($tasks));
+        $task = $tasks[0];
+        $this->assertNotNull($task->getId());
+
+        $crawler = $this->browser->request(
+            'GET',
+            'tasks/'.$task->getId().'/edit'
+        );
+
+        $title = $task->getTitle();
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('delete')->form();
+        $this->browser->submit($form);
+        $crawler = $this->browser->followRedirect();
+
+        $this->assertStringNotContainsString($title, $crawler->text());
+    }
 }

@@ -51,24 +51,6 @@ class UserRoleUserTest extends webTestCase
         $this->browser->getCookieJar()->set($cookie);
     }
 
-    public function testUserCreate()
-    {
-        $this->browser->request(
-            'GET',
-            'users/create'
-        );
-        $this->assertSame(403, $this->browser->getResponse()->getStatusCode());
-    }
-
-    public function testUserList()
-    {
-        $this->browser->request(
-            'GET',
-            'users'
-        );
-        $this->assertSame(403, $this->browser->getResponse()->getStatusCode());
-    }
-
     public function testUserModify()
     {
         $this->browser->request(
@@ -76,5 +58,27 @@ class UserRoleUserTest extends webTestCase
             'users/'.$this->user->getId().'/edit'
         );
         $this->assertSame(403, $this->browser->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @dataProvider urlAndCode
+     */
+    public function testUrlStatic($url, $code)
+    {
+        $this->browser->request(
+            'GET',
+            $url
+        );
+        $this->assertSame($code, $this->browser->getResponse()->getStatusCode());
+    }
+
+    public function urlAndCode()
+    {
+        return [
+            ['users', 403],
+            ['users/create', 403],
+            ['tasks', 200],
+            ['tasks/create', 200],
+        ];
     }
 }
