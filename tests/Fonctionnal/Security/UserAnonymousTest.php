@@ -7,24 +7,27 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserAnonymousTest extends webTestCase
 {
-    public function testUserCreate()
+    /**
+     * @dataProvider urlAndCode
+     */
+    public function testUrlStatic($url, $code)
     {
         $browser = static::createClient();
         $browser->request(
             'GET',
-            'users/create'
+            $url
         );
-        $this->assertSame(302, $browser->getResponse()->getStatusCode());
+        $this->assertSame($code, $browser->getResponse()->getStatusCode());
     }
 
-    public function testUserList()
+    public function urlAndCode()
     {
-        $browser = static::createClient();
-        $browser->request(
-            'GET',
-            'users'
-        );
-        $this->assertSame(302, $browser->getResponse()->getStatusCode());
+        return [
+            ['users', 302],
+            ['users/create', 302],
+            ['tasks', 302],
+            ['tasks/create', 302],
+        ];
     }
 
     public function testUserModify()
@@ -35,16 +38,6 @@ class UserAnonymousTest extends webTestCase
         $browser->request(
             'GET',
             'users/'.$user->getId().'/edit'
-        );
-        $this->assertSame(302, $browser->getResponse()->getStatusCode());
-    }
-
-    public function testTaskList()
-    {
-        $browser = static::createClient();
-        $browser->request(
-            'GET',
-            'tasks'
         );
         $this->assertSame(302, $browser->getResponse()->getStatusCode());
     }

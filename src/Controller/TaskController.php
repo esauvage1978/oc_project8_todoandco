@@ -86,8 +86,13 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(): Response
+    public function deleteTaskAction(Request $request, Task $task, TaskManager $taskManager): Response
     {
-        return null;
+        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            $taskManager->remove($task);
+        }
+
+        return $this->redirectToRoute('task_list');
     }
 }

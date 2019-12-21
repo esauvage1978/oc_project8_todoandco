@@ -52,4 +52,10 @@ class TaskManager
     {
         return $this->validator->getErrors($task);
     }
+
+    public function remove(Task $task)
+    {
+        $this->manager->remove($task);
+        $this->manager->flush();
+    }
 }

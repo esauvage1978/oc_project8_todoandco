@@ -32,7 +32,7 @@ class TaskManagerTest extends WebTestCase
         self::$faker = Factory::create('fr_FR');
     }
 
-    public function testCreateTask()
+    public function testCreateTask(): Task
     {
         $instance = new Task();
         $instance
@@ -41,6 +41,8 @@ class TaskManagerTest extends WebTestCase
             ;
 
         $this->assertTrue(self::$manager->save($instance));
+
+        return $instance;
     }
 
     public function testCreateUserKo()

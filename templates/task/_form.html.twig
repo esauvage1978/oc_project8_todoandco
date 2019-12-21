@@ -16,6 +16,12 @@
         <button class="btn btn-success " name="save" id="save">
             <i class="fas fa-save"></i> {{ title |default('Modifier') }}
         </button>
+
+        {% if task.id and task | taskCanDelete %}
+            <span class="btn btn-danger " onclick="$('#delete').click();">
+                <i class="fas fa-trash"></i> Supprimer
+            </span>
+        {% endif %}
     </div>
 </div>
 {{ form_end(form) }}

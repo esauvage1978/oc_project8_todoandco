@@ -11,6 +11,9 @@
             {{ include ('task/_form.html.twig',{'title':'Modifier la tâche' }) }}
 
 
+            <div class="d-none">
+                {{ include('share/_delete_form.html.twig',{'domaine': 'task','id':task.id}) }}
+            </div>
         </div>
     </div>
     <a href="{{ path('task_list') }}" class="btn btn-link m-5">Retour à la liste des tâches</a>

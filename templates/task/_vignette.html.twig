@@ -14,23 +14,26 @@
                 </a>
             </h4>
 
-            <p>{{ task.content | raw}}</p>
+            <p>{{ task.content | raw }}</p>
         </div>
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <div class="card-footer text-center">
-            {% if task | taskCanUpdate %}
-            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm ">
-                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-            </a>
-            {% endif %}
+            <div class="card-footer text-center">
+                <div class="row">
+                    <div class="col  d-flex justify-content-center align-items-center">
+                        {% if task | taskCanUpdate %}
+                            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm ">
 
-            {% if task | taskCanDelete %}
-                <a href="{{ path('task_delete', {'id' : task.id }) }}" class="btn btn-danger btn-sm ">
-                    Supprimer
-                </a>
-            {% endif %}
+                                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                            </a>
+                        {% endif %}
 
-        </div>
+                        {% if task | taskCanDelete %}
+                            <span></span>
+                            {{ include('share/_delete_form.html.twig',{'domaine': 'task','id':task.id}) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
 </div>
