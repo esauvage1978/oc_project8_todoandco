@@ -1,0 +1,35 @@
+{{ form_start(form) }}
+<div class="card">
+    <div class="card-body">
+        <div class="form-group row">
+            {{ form_label(form.title,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+            <div class="col">
+                {{ form_widget(form.title) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="{{ form.isDone.vars.id }}">
+                Tâche terminée ?
+            </label>
+            <div class="col mt-1">
+                {{ form_row(form.isDone) }}
+            </div>
+        </div>
+
+        {{ form_row(form.content) }}
+
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-success " name="save" id="save">
+            <i class="fas fa-save"></i> {{ title |default('Modifier') }}
+        </button>
+
+        {% if task.id and task | taskCanDelete %}
+            <span class="btn btn-danger " onclick="$('#delete').click();">
+                <i class="fas fa-trash"></i> Supprimer
+            </span>
+        {% endif %}
+
+    </div>
+</div>
+{{ form_end(form) }}

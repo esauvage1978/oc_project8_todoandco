@@ -1,0 +1,16 @@
+App\Entity\Task:
+  properties:
+    title:
+      - NotBlank:
+          message: "Vous devez saisir un titre."
+      - Length:
+          min: 3
+          max: 255
+          minMessage: 'Le titre "{{ value }}" doit avoir plus de 3 caractères'
+          maxMessage: 'Le titre "{{ value }}" ne peut pas avoir plus de 255 caractères'
+    content:
+      - NotBlank:
+          message: "Vous devez saisir du contenu."
+      - Length:
+          min: 3
+          minMessage: 'Le contenu "{{ value }}" doit avoir plus de 3 caractères'

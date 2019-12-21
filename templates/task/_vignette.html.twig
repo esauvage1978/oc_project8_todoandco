@@ -1,0 +1,46 @@
+<div class="col-sm-4 mb-2">
+    <div class="card">
+        <div class="card-body">
+            <div class="float-right ">
+                {% if task.isDone %}
+                    <i class="fa fa-check text-black-50"></i>
+                {% else %}
+                    <i class="fa fa-times text-black-50"></i>
+                {% endif %}
+            </div>
+            <h4 class="card-title">
+                <a href="{{ path('task_edit', {'id' : task.id }) }}">
+                    {{ task.title }}
+                </a>
+            </h4>
+
+            <p>{{ task.content | raw }}</p>
+        </div>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="card-footer text-center">
+                <div class="row">
+                    <div class="col  d-flex justify-content-center align-items-center">
+                        {% if task | taskCanUpdate %}
+                        {% if not task.isDone %}
+                            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm ">
+                                <i class="fa fa-toggle-on"></i>
+                                Marquer comme faite
+                            </a>
+                        {% else %}
+                            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-warning btn-sm ">
+                                <i class="fa fa-toggle-off"></i>
+                                Marquer non terminée
+                            </a>
+                        {% endif %}
+                        {% endif %}
+
+                        {% if task | taskCanDelete %}
+                            <span></span>
+                            {{ include('share/_delete_form.html.twig',{'domaine': 'task','id':task.id}) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
