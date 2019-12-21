@@ -22,7 +22,16 @@ class TaskController extends AbstractController
      */
     public function listAction(TaskRepository $taskRepository): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false])]);
+    }
+
+    /**
+     * @Route("/tasks/toogleoff", name="task_list_toogle_off", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function listToggleOffAction(TaskRepository $taskRepository): Response
+    {
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true])]);
     }
 
     /**
@@ -78,9 +87,22 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(): Response
+    public function toggleTaskAction(Task $task, TaskManager $taskManager): Response
     {
-        return null;
+        /** @var bool $state */
+        $state = $task->getIsDone();
+        $taskManager->toogle($task);
+        $taskManager->save($task);
+
+        if (!$state) {
+            $this->addFlash('success', sprintf('La tâche <<%s>> a bien été marquée comme faite.', $task->getTitle()));
+
+            return $this->redirectToRoute('task_list');
+        }
+
+        $this->addFlash('success', sprintf('La tâche <<%s>> a bien été marquée comme non faite.', $task->getTitle()));
+
+        return $this->redirectToRoute('task_list_toogle_off');
     }
 
     /**
