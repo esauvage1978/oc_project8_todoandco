@@ -58,4 +58,9 @@ class TaskManager
         $this->manager->remove($task);
         $this->manager->flush();
     }
+
+    public function toogle(Task $task)
+    {
+        $task->setIsDone(!$task->getIsDone());
+    }
 }
