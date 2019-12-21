@@ -45,6 +45,20 @@ class TaskManagerTest extends WebTestCase
         return $instance;
     }
 
+    public function testToogleTask()
+    {
+        $instance = new Task();
+        $instance
+            ->setTitle(self::$faker->realText(20))
+            ->setContent(self::$faker->realText(200))
+            ->setIsDone(false)
+        ;
+        self::$manager->toogle($instance);
+        $this->assertTrue($instance->getIsDone());
+        self::$manager->toogle($instance);
+        $this->assertFalse($instance->getIsDone());
+    }
+
     public function testCreateUserKo()
     {
         $instance = new Task();

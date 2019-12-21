@@ -74,6 +74,16 @@ class TaskControllerTest extends webTestCase
         $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
     }
 
+    public function testShowListToogleOff()
+    {
+        $this->browser->request(
+            'GET',
+            'tasks/toogleoff'
+        );
+
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+    }
+
     public function testTaskModify()
     {
         /** @var Task $task */
@@ -99,6 +109,38 @@ class TaskControllerTest extends webTestCase
         $this->assertStringContainsString($title, $crawler->text());
     }
 
+    public function testTaskModifyToggleFalse()
+    {
+        /** @var Task $task */
+        $tasks = $this->taskRepo->findBy(['isDone' => false]);
+        $this->assertGreaterThan(0, count($tasks));
+        $task = $tasks[0];
+        $this->assertNotNull($task->getId());
+
+        $crawler = $this->browser->request(
+            'GET',
+            'tasks/'.$task->getId().'/toggle'
+        );
+
+        $this->assertSame(302, $this->browser->getResponse()->getStatusCode());
+    }
+
+    public function testTaskModifyToggleTrue()
+    {
+        /** @var Task $task */
+        $tasks = $this->taskRepo->findBy(['isDone' => true]);
+        $this->assertGreaterThan(0, count($tasks));
+        $task = $tasks[0];
+        $this->assertNotNull($task->getId());
+
+        $crawler = $this->browser->request(
+            'GET',
+            'tasks/'.$task->getId().'/toggle'
+        );
+
+        $this->assertSame(302, $this->browser->getResponse()->getStatusCode());
+    }
+
     public function testTaskDelete()
     {
         /** @var Task $task */
@@ -115,6 +157,29 @@ class TaskControllerTest extends webTestCase
         $title = $task->getTitle();
         $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
         $form = $crawler->selectButton('delete')->form();
+        $this->browser->submit($form);
+        $crawler = $this->browser->followRedirect();
+
+        $this->assertStringNotContainsString($title, $crawler->text());
+    }
+
+    public function testTaskToogle()
+    {
+        /** @var Task $task */
+        $tasks = $this->taskRepo->findBy(['isDone' => false]);
+        $this->assertGreaterThan(0, count($tasks));
+        $task = $tasks[0];
+        $this->assertNotNull($task->getId());
+
+        $crawler = $this->browser->request(
+            'GET',
+            'tasks/'.$task->getId().'/edit'
+        );
+
+        $title = $task->getTitle();
+        $this->assertSame(200, $this->browser->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('save')->form();
+        $form['task[isDone]'] = 1;
         $this->browser->submit($form);
         $crawler = $this->browser->followRedirect();
 
