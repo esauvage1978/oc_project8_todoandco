@@ -110,6 +110,8 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Request $request, Task $task, TaskManager $taskManager): Response
     {
+        $this->denyAccessUnlessGranted(TaskVoter::DELETE, $task);
+
         if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
             $this->addFlash('success', 'La tâche a bien été supprimée.');
             $taskManager->remove($task);
