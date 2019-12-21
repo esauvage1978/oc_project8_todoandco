@@ -21,10 +21,17 @@
                 <div class="row">
                     <div class="col  d-flex justify-content-center align-items-center">
                         {% if task | taskCanUpdate %}
+                        {% if not task.isDone %}
                             <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm ">
-
-                                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                                <i class="fa fa-toggle-on"></i>
+                                Marquer comme faite
                             </a>
+                        {% else %}
+                            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-warning btn-sm ">
+                                <i class="fa fa-toggle-off"></i>
+                                Marquer non terminée
+                            </a>
+                        {% endif %}
                         {% endif %}
 
                         {% if task | taskCanDelete %}
