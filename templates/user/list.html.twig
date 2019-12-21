@@ -17,7 +17,13 @@
                     <th>#</th>
                     <th>Nom d'utilisateur</th>
                     <th>Adresse d'utilisateur</th>
-                    <th>Actions</th>
+                    <th class="desktop text-center">
+                        <i class="fa fa-user-cog"  data-toggle="tooltip" data-placement="top" title="Administrateur"></i>
+                    </th>
+                    <th class="desktop text-center">
+                        <i class="fa fa-user"  data-toggle="tooltip" data-placement="top" title="Utilisateur"></i>
+                    </th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,13 +32,20 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
+                        <td class="text-center">
+                            <span class="text-{{ 'ROLE_ADMIN' in user.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-{{ 'ROLE_USER' in user.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                        </td>
                         <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+
     {% endif %}
 {% endblock %}

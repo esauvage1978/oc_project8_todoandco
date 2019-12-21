@@ -10,7 +10,14 @@
 
             {{ include ('task/_form.html.twig',{'title':'Modifier la tâche' }) }}
 
-
+            <p class="text-muted">
+                Cette tâche
+                {% if task.user %}
+                    appartient à {{ task.user.username }}
+                {%  else %}
+                    n'appartient à personne
+                {% endif %}
+            </p>
             <div class="d-none">
                 {{ include('share/_delete_form.html.twig',{'domaine': 'task','id':task.id}) }}
             </div>

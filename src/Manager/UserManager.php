@@ -50,7 +50,7 @@ class UserManager
 
     public function initialiseUser(User $user)
     {
-        if (empty($user->getRoles())) {
+        if (empty($user->getId()) and empty($user->getRoles())) {
             $user->setRoles(['ROLE_USER']);
         }
         $this->encodePassword($user);

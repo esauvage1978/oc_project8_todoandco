@@ -4,11 +4,25 @@
 {% block header_img %}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('user_create')}) }}
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
+        {{ form_start(form) }}
+        <div class="card ">
+            <div class="card-footer">
+                Les informations de l'utilisateur
+            </div>
+            <div class="card-body">
             {{ form_widget(form) }}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col  d-flex justify-content-between align-items-center">
+                        <button id="create" name="create" type="submit" class="btn btn-success pull-right">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <button id="create" name="create" type="submit" class="btn btn-success pull-right">Ajouter</button>
         {{ form_end(form) }}
     </div>
 {% endblock %}
